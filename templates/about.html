@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Acerca de Yoga Terapéutico{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Acerca de Yoga Terapéutico</h1>
+    </div>
+</section>
+
+<section class="about-content">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>¿Qué es el Yoga Terapéutico?</h2>
+                <p>El yoga terapéutico es el proceso de empoderar a las personas para avanzar hacia una mejor salud y bienestar mediante la aplicación de las enseñanzas y prácticas del yoga.</p>
+                
+                <p>A diferencia de las clases regulares de yoga, el yoga terapéutico se realiza típicamente de forma individual o en grupos pequeños, con un enfoque en abordar condiciones de salud específicas. Las prácticas se adaptan a las necesidades y habilidades únicas de cada persona.</p>
+                
+                <h2>Nuestro Enfoque</h2>
+                <p>Nuestra plataforma conecta terapeutas de yoga calificados con pacientes que buscan enfoques alternativos para manejar condiciones de salud. Proporcionamos herramientas para que los terapeutas creen series de yoga terapéutico personalizadas adaptadas a condiciones específicas.</p>
+                
+                <p>Para los pacientes, ofrecemos una interfaz intuitiva para seguir estas series a su propio ritmo, con orientación detallada y seguimiento del progreso.</p>
+                
+                <h2>La Ciencia Detrás del Yoga Terapéutico</h2>
+                <p>Investigaciones han demostrado que el yoga puede ser efectivo para manejar diversas condiciones de salud, incluyendo:</p>
+                <ul>
+                    <li>Trastornos de ansiedad y relacionados con el estrés</li>
+                    <li>Dolor crónico de espalda y otros problemas musculoesqueléticos</li>
+                    <li>Insomnio y trastornos del sueño</li>
+                    <li>Y muchas otras condiciones</li>
+                </ul>
+                
+                <p>A través de una combinación de posturas físicas, técnicas de respiración y prácticas de atención plena, el yoga terapéutico trabaja en múltiples dimensiones de la experiencia humana para promover la curación y el bienestar.</p>
+            </div>
+            <div class="about-image">
+                <img src="{{ url_for('static', filename='images/about-yoga.jpg') }}" alt="Sesión de yoga terapéutico">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

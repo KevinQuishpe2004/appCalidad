@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Yoga Terapéutico - Sanación a través del Movimiento{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Yoga Terapéutico para Sanación y Bienestar</h1>
+            <p class="hero-subtitle">Series de yoga personalizadas diseñadas por expertos para condiciones de salud específicas</p>
+            {% if not session.get('user_id') %}
+                <div class="hero-buttons">
+                    <a href="{{ url_for('auth.login') }}" class="btn-primary">Iniciar Sesión</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn-secondary">Registrarse como Instructor</a>
+                </div>
+            {% else %}
+                <div class="hero-buttons">
+                    {% if session.get('role') == 'instructor' %}
+                        <a href="{{ url_for('instructor.dashboard') }}" class="btn-primary">Ir al Panel</a>
+                    {% else %}
+                        <a href="{{ url_for('patient.dashboard') }}" class="btn-primary">Ir al Panel</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='images/hero-yoga.jpg') }}" alt="Persona practicando yoga">
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Cómo ayuda el Yoga Terapéutico</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Alivio de Ansiedad</h3>
+                <p>Posturas y técnicas de respiración específicas para calmar la mente y reducir síntomas de ansiedad.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🦴</div>
+                <h3>Manejo del Dolor de Espalda</h3>
+                <p>Estiramientos suaves y posturas de fortalecimiento para aliviar el dolor de espalda y mejorar la salud espinal.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💤</div>
+                <h3>Mejor Sueño</h3>
+                <p>Secuencias relajantes diseñadas para abordar el insomnio y mejorar la calidad del sueño.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="container">
+        <h2 class="section-title">Cómo Funciona</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Registro de Instructores</h3>
+                <p>Los terapeutas de yoga se registran y configuran su cuenta.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Gestión de Pacientes</h3>
+                <p>Los instructores añaden pacientes y gestionan su información.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Creación de Series Terapéuticas</h3>
+                <p>Los instructores crean series de yoga personalizadas para condiciones específicas.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Práctica del Paciente</h3>
+                <p>Los pacientes siguen sus series asignadas con guía detallada.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3>Seguimiento de Progreso</h3>
+                <p>Monitoreo de mejoras en síntomas y ajustes según sea necesario.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
