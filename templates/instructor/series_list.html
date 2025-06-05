@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Series Terapéuticas - Yoga Terapia{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Series Terapéuticas</h1>
+        <div class="page-actions">
+            <a href="{{ url_for('instructor.create_series') }}" class="btn-primary">Crear Nueva Serie</a>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        {% if series %}
+            <div class="series-grid">
+                {% for s in series %}
+                    <div class="series-card">
+                        <div class="series-type">{{ s.therapy_type.name }}</div>
+                        <h3 class="series-name">{{ s.name }}</h3>
+                        <div class="series-details">
+                            <p><strong>Posturas:</strong> {{ s.postures|length }}</p>
+                            <p><strong>Sesiones:</strong> {{ s.total_sessions }}</p>
+                            <p><strong>Creada:</strong> {{ s.created_at.strftime('%d/%m/%Y') }}</p>
+                        </div>
+                        <div class="series-status">
+                            {% if s.patient %}
+                                <span class="status-badge status-active">Asignada a {{ s.patient.name }}</span>
+                            {% else %}
+                                <span class="status-badge status-inactive">Sin Asignar</span>
+                            {% endif %}
+                        </div>
+                        <div class="series-actions">
+                            <a href="#" class="btn-secondary btn-small">Ver Detalles</a>
+                            {% if not s.patient %}
+                                <a href="#" class="btn-primary btn-small">Asignar a Paciente</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No has creado ninguna serie terapéutica aún.</p>
+                <a href="{{ url_for('instructor.create_series') }}" class="btn-primary">Crear Mi Primera Serie</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

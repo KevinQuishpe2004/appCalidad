@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Asignar Serie a Paciente - Yoga Terapia{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Asignar Serie a {{ patient.name }}</h1>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        {% if series %}
+            <div class="form-card">
+                <form method="POST" action="{{ url_for('instructor.assign_series', patient_id=patient.id) }}">
+                    <div class="form-group">
+                        <label for="series_id">Seleccionar Serie Terapéutica</label>
+                        <select id="series_id" name="series_id" required>
+                            <option value="">Seleccione una serie</option>
+                            {% for s in series %}
+                                <option value="{{ s.id }}">{{ s.name }} ({{ s.therapy_type.name }}, {{ s.total_sessions }} sesiones)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-info">
+                        {% if patient.assigned_series %}
+                            <div class="alert alert-warning">
+                                <p><strong>Nota:</strong> El paciente actualmente tiene asignada la serie "{{ patient.assigned_series.name }}". 
+                                Esta será reemplazada por su nueva selección.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Asignar Serie</button>
+                        <a href="{{ url_for('instructor.patient_series', patient_id=patient.id) }}" class="btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No has creado ninguna serie terapéutica aún.</p>
+                <a href="{{ url_for('instructor.create_series') }}" class="btn-primary">Crear Mi Primera Serie</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

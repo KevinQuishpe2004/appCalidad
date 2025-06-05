@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Sesiones - {{ patient.name }} - Yoga Terapia{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Historial de Sesiones de {{ patient.name }}</h1>
+        <div class="page-actions">
+            <a href="{{ url_for('instructor.patient_series', patient_id=patient.id) }}" class="btn-secondary">Ver Serie</a>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        {% if sessions %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <!-- <th>Fecha</th> -->
+                            <th>Serie</th>
+                            <!-- <th>Hora Inicio</th>
+                            <th>Hora Fin</th> -->
+                            <th>Duración</th>
+                            <!-- <th>Pausas</th> -->
+                            <th>Dolor Inicial</th>
+                            <th>Dolor Final</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in sessions %}
+                            <tr>
+                                <!-- <td>{{ session.date.strftime('%d/%m/%Y') }}</td> -->
+                                <td>{{ session.series.name }}</td>
+                                <!-- <td>{{ session.start_time.strftime('%H:%M') if session.start_time else '-' }}</td>
+                                <td>{{ session.end_time.strftime('%H:%M') if session.end_time else '-' }}</td> -->
+                                <td>
+                                    {% if session.effective_duration %}
+                                        {% set minutes = (session.effective_duration // 60) %}
+                                        {% set seconds = (session.effective_duration % 60) %}
+                                        {{ minutes }}m {{ seconds }}s
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <!-- <td>{{ session.pause_count }}</td> -->
+                                <td>
+                                    <span class="pain-level pain-{{ session.pain_level_start|lower }}">
+                                        {{ session.pain_level_start }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if session.pain_level_end %}
+                                        <span class="pain-level pain-{{ session.pain_level_end|lower }}">
+                                            {{ session.pain_level_end }}
+                                        </span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="btn-icon view-comment" title="Ver Comentario" data-comment="{{ session.comment or 'No se registraron comentarios.' }}">💬</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="commentModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Comentario del Paciente</h3>
+                    <div id="commentText"></div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>{{ patient.name }} no ha completado ninguna sesión aún.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Funcionalidad del modal de comentarios
+        const modal = document.getElementById('commentModal');
+        const commentText = document.getElementById('commentText');
+        const commentButtons = document.querySelectorAll('.view-comment');
+        const closeModal = document.querySelector('.close-modal');
+        
+        commentButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const comment = this.getAttribute('data-comment');
+                commentText.textContent = comment;
+                modal.style.display = 'block';
+            });
+        });
+        
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

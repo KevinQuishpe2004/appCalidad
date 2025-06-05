@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Serie Terapéutica - {{ patient.name }} - Yoga Terapia{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Serie Terapéutica de {{ patient.name }}</h1>
+        <div class="page-actions">
+            <a href="{{ url_for('instructor.assign_series', patient_id=patient.id) }}" class="btn-primary">Asignar Serie</a>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        {% if patient.assigned_series %}
+            <div class="series-detail-card">
+                <div class="series-header">
+                    <h2>{{ patient.assigned_series.name }}</h2>
+                    <div class="series-type">{{ patient.assigned_series.therapy_type.name }}</div>
+                </div>
+                
+                <div class="series-progress">
+                    <h3>Progreso</h3>
+                    {% set completed = patient.assigned_series.completed_sessions_count() %}
+                    {% set total = patient.assigned_series.total_sessions %}
+                    {% set percent = (completed / total * 100)|int %}
+                    
+                    <div class="progress-container large">
+                        <div class="progress-bar" style="width: {{ percent }}%"></div>
+                        <span class="progress-text">{{ completed }}/{{ total }} sesiones completadas</span>
+                    </div>
+                    
+                    <p class="progress-status">
+                        {% if completed == 0 %}
+                            El paciente no ha comenzado esta serie aún.
+                        {% elif completed < total %}
+                            El paciente está realizando esta serie.
+                        {% else %}
+                            El paciente ha completado todas las sesiones.
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="series-postures">
+                    <h3>Posturas de la Serie</h3>
+                    <div class="posture-timeline">
+                        {% for series_posture in patient.assigned_series.postures %}
+                            <div class="posture-timeline-item">
+                                <div class="posture-number">{{ loop.index }}</div>
+                                <div class="posture-details">
+                                    <h4>{{ series_posture.posture.name }}</h4>
+                                    <p class="posture-sanskrit">{{ series_posture.posture.sanskrit_name or '' }}</p>
+                                    <p class="posture-duration">{{ series_posture.duration_minutes }} minutos</p>
+                                </div>
+                                <div class="posture-image">
+                                    <img src="{{ series_posture.posture.image_url or '/static/images/pose-placeholder.jpg' }}" 
+                                         alt="{{ series_posture.posture.name }}">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="series-actions">
+                    <a href="{{ url_for('instructor.patient_sessions', patient_id=patient.id) }}" class="btn-secondary">Ver Historial</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>{{ patient.name }} no tiene series asignadas.</p>
+                <a href="{{ url_for('instructor.assign_series', patient_id=patient.id) }}" class="btn-primary">Asignar Serie</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

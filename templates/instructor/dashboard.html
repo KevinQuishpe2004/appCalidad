@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Instructor - Yoga Terapia{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Panel de Instructor</h1>
+        <p>Bienvenido/a, {{ instructor.name }}</p>
+    </div>
+</section>
+
+<section class="dashboard-content">
+    <div class="container">
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>Pacientes Totales</h3>
+                <p class="stat-number">{{ patients|length }}</p>
+                <a href="{{ url_for('instructor.patients') }}" class="stat-link">Ver Todos</a>
+            </div>
+            <div class="stat-card">
+                <h3>Series Terapéuticas</h3>
+                <p class="stat-number">{{ instructor.created_series|length }}</p>
+                <a href="{{ url_for('instructor.series_list') }}" class="stat-link">Ver Todas</a>
+            </div>
+        </div>
+
+        <div class="dashboard-actions">
+            <h2>Acciones Rápidas</h2>
+            <div class="action-buttons">
+                <a href="{{ url_for('instructor.add_patient') }}" class="btn-action">
+                    <span class="action-icon">➕</span>
+                    <span>Agregar Paciente</span>
+                </a>
+                <a href="{{ url_for('instructor.create_series') }}" class="btn-action">
+                    <span class="action-icon">📋</span>
+                    <span>Crear Nueva Serie</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-recent">
+            <h2>Pacientes Recientes</h2>
+            {% if patients %}
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Serie Asignada</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients[:5] %}
+                                <tr>
+                                    <td>{{ patient.name }}</td>
+                                    <td>{{ patient.email }}</td>
+                                    <td>
+                                        {% if patient.assigned_series %}
+                                            {{ patient.assigned_series.name }}
+                                        {% else %}
+                                            <span class="status-badge status-inactive">Ninguna</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="actions-cell">
+                                        <a href="{{ url_for('instructor.patient_series', patient_id=patient.id) }}" class="btn-icon" title="Ver Serie">📋</a>
+                                        <a href="{{ url_for('instructor.patient_sessions', patient_id=patient.id) }}" class="btn-icon" title="Ver Sesiones">📊</a>
+                                        <a href="{{ url_for('instructor.assign_series', patient_id=patient.id) }}" class="btn-icon" title="Asignar Serie">🔗</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if patients|length > 5 %}
+                    <div class="view-all-link">
+                        <a href="{{ url_for('instructor.patients') }}">Ver Todos los Pacientes</a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <p>Aún no has agregado pacientes.</p>
+                    <a href="{{ url_for('instructor.add_patient') }}" class="btn-primary">Agregar Primer Paciente</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
