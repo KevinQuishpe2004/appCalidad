@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+
+{% block title %}Ejecutar Serie - Terapia de Yoga{% endblock %}
+
+{% block extra_css %}
+<style>
+    .timer-display {
+        font-size: 3rem;
+        font-weight: 600;
+        text-align: center;
+        margin: 20px 0;
+    }
+    
+    .posture-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+    }
+    
+    .posture-current {
+        background: var(--color-background-light);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .posture-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .posture-image-large {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .posture-tabs {
+        display: flex;
+        width: 100%;
+        border-bottom: 1px solid var(--color-border);
+        margin-bottom: 20px;
+    }
+    
+    .posture-tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+    }
+    
+    .posture-tab.active {
+        border-bottom-color: var(--color-primary);
+        font-weight: 500;
+    }
+    
+    .posture-content {
+        width: 100%;
+    }
+    
+    .posture-content-panel {
+        display: none;
+        padding: 15px 0;
+    }
+    
+    .posture-content-panel.active {
+        display: block;
+    }
+    
+    .progress-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    
+    .progress-step {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--color-background-dark);
+    }
+    
+    .progress-step.completed {
+        background-color: var(--color-success);
+    }
+    
+    .progress-step.current {
+        background-color: var(--color-primary);
+        transform: scale(1.2);
+    }
+    
+    .session-controls {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+    }
+    
+    .session-completion {
+        margin-top: 40px;
+        padding: 30px;
+        background: var(--color-background-light);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>{{ series.name }}</h1>
+        <p>Sesión {{ series.completed_sessions_count() + 1 }} de {{ series.total_sessions }}</p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        <div class="progress-indicator" id="postureProgress">
+            {% for _ in postures %}
+                <div class="progress-step {% if loop.index == 1 %}current{% endif %}"></div>
+            {% endfor %}
+        </div>
+
+        <div class="timer-display" id="timer">00:00</div>
+        
+        <div class="session-controls">
+            <button id="pauseButton" class="btn-secondary">
+                <span class="btn-icon">⏸️</span> Pausar
+            </button>
+            <button id="skipButton" class="btn-primary">
+                <span class="btn-icon">⏭️</span> Siguiente Postura
+            </button>
+        </div>
+        
+        <div id="postureContainer" class="posture-current">
+            {% for posture_info in postures %}
+                {% set posture, series_posture = posture_info %}
+                <div class="posture-display" data-posture-index="{{ loop.index0 }}" data-duration="{{ series_posture.duration_minutes * 60 }}" {% if loop.index0 > 0 %}style="display: none;"{% endif %}>
+                    <h2>{{ posture.name }}</h2>
+                    <p class="posture-sanskrit">{{ posture.sanskrit_name or '' }}</p>
+                    
+                    <div class="posture-image-container">
+                        <img src="{{ posture.image_url or '/static/images/pose-placeholder.jpg' }}" alt="{{ posture.name }}" class="posture-image-large">
+                    </div>
+                    
+                    <div class="posture-tabs">
+                        <div class="posture-tab active" data-tab="instructions">Instrucciones</div>
+                        <div class="posture-tab" data-tab="benefits">Beneficios</div>
+                        <div class="posture-tab" data-tab="modifications">Modificaciones</div>
+                    </div>
+                    
+                    <div class="posture-content">
+                        <div class="posture-content-panel active" data-content="instructions">
+                            {{ posture.steps|nl2br|safe }}
+                        </div>
+                        <div class="posture-content-panel" data-content="benefits">
+                            {{ posture.benefits }}
+                        </div>
+                        <div class="posture-content-panel" data-content="modifications">
+                            {{ posture.modifications or 'No hay modificaciones específicas para esta postura.' }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div id="sessionCompletion" class="session-completion">
+            <h2>¡Sesión Completa!</h2>
+            <p>Excelente trabajo completando tu sesión de yoga. Por favor proporciona tus comentarios:</p>
+            
+            <form method="POST" action="{{ url_for('patient.execute_series') }}">
+                <input type="hidden" name="session_id" value="{{ session_id }}">
+                
+                <div class="form-group">
+                    <label>¿Cómo calificarías tu nivel de dolor/malestar ahora?</label>
+                    <div class="pain-level-selection">
+                        <label class="pain-radio">
+                            <input type="radio" name="pain_level_end" value="None" required>
+                            <span class="pain-level-option pain-none">
+                                <div class="pain-icon">😊</div>
+                                <div class="pain-label">Sin Dolor</div>
+                            </span>
+                        </label>
+                        
+                        <label class="pain-radio">
+                            <input type="radio" name="pain_level_end" value="Mild" required>
+                            <span class="pain-level-option pain-mild">
+                                <div class="pain-icon">🙂</div>
+                                <div class="pain-label">Leve</div>
+                            </span>
+                        </label>
+                        
+                        <label class="pain-radio">
+                            <input type="radio" name="pain_level_end" value="Moderate" required>
+                            <span class="pain-level-option pain-moderate">
+                                <div class="pain-icon">😐</div>
+                                <div class="pain-label">Moderado</div>
+                            </span>
+                        </label>
+                        
+                        <label class="pain-radio">
+                            <input type="radio" name="pain_level_end" value="Intense" required>
+                            <span class="pain-level-option pain-intense">
+                                <div class="pain-icon">😣</div>
+                                <div class="pain-label">Intenso</div>
+                            </span>
+                        </label>
+                        
+                        <label class="pain-radio">
+                            <input type="radio" name="pain_level_end" value="Maximum" required>
+                            <span class="pain-level-option pain-maximum">
+                                <div class="pain-icon">😫</div>
+                                <div class="pain-label">Máximo</div>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comment">Comentarios sobre esta sesión:</label>
+                    <textarea id="comment" name="comment" rows="4" required placeholder="¿Cómo te sentiste durante y después de la sesión? ¿Alguna dificultad con posturas específicas?"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Completar Sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variables
+        const postureDisplays = document.querySelectorAll('.posture-display');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        const timerDisplay = document.getElementById('timer');
+        const pauseButton = document.getElementById('pauseButton');
+        const skipButton = document.getElementById('skipButton');
+        const sessionCompletion = document.getElementById('sessionCompletion');
+        const postureContainer = document.getElementById('postureContainer');
+        
+        let currentPostureIndex = 0;
+        let totalPostures = postureDisplays.length;
+        let currentPostureDuration = parseInt(postureDisplays[0].dataset.duration);
+        let timeRemaining = currentPostureDuration;
+        let timerInterval;
+        let isPaused = false;
+        
+        // Initialize tabs
+        const tabs = document.querySelectorAll('.posture-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabName = this.dataset.tab;
+                const tabContainer = this.closest('.posture-display');
+                
+                // Update active tab
+                tabContainer.querySelectorAll('.posture-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show active content
+                tabContainer.querySelectorAll('.posture-content-panel').forEach(panel => {
+                    panel.classList.remove('active');
+                });
+                tabContainer.querySelector(`.posture-content-panel[data-content="${tabName}"]`).classList.add('active');
+            });
+        });
+        
+        // Timer functions
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimerDisplay();
+        }
+        
+        function updateTimer() {
+            if (timeRemaining <= 0) {
+                moveToNextPosture();
+            } else {
+                timeRemaining--;
+                updateTimerDisplay();
+            }
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function pauseTimer() {
+            if (isPaused) {
+                // Resume timer
+                isPaused = false;
+                pauseButton.innerHTML = '<span class="btn-icon">⏸️</span> Pausar';
+                startTimer();
+            } else {
+                // Pause timer
+                isPaused = true;
+                pauseButton.innerHTML = '<span class="btn-icon">▶️</span> Reanudar';
+                clearInterval(timerInterval);
+                
+                // Record pause in database
+                fetch('{{ url_for("patient.pause_session") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: '{{ session_id }}'
+                    })
+                });
+            }
+        }
+        
+        function moveToNextPosture() {
+            // Stop current timer
+            clearInterval(timerInterval);
+            
+            // Hide current posture
+            postureDisplays[currentPostureIndex].style.display = 'none';
+            
+            // Update progress indicator
+            progressSteps[currentPostureIndex].classList.remove('current');
+            progressSteps[currentPostureIndex].classList.add('completed');
+            
+            currentPostureIndex++;
+            
+            if (currentPostureIndex < totalPostures) {
+                // Show next posture
+                postureDisplays[currentPostureIndex].style.display = 'block';
+                progressSteps[currentPostureIndex].classList.add('current');
+                
+                // Reset timer
+                currentPostureDuration = parseInt(postureDisplays[currentPostureIndex].dataset.duration);
+                timeRemaining = currentPostureDuration;
+                
+                // Start timer for next posture
+                if (!isPaused) {
+                    startTimer();
+                } else {
+                    updateTimerDisplay();
+                }
+            } else {
+                // All postures completed
+                completeSession();
+            }
+        }
+        
+        function completeSession() {
+            // Hide posture container and show completion form
+            postureContainer.style.display = 'none';
+            document.querySelector('.session-controls').style.display = 'none';
+            sessionCompletion.style.display = 'block';
+        }
+        
+        // Event listeners
+        pauseButton.addEventListener('click', pauseTimer);
+        skipButton.addEventListener('click', moveToNextPosture);
+        
+        // Start the timer
+        startTimer();
+    });
+</script>
+{% endblock %}

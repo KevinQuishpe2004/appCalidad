@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Serie - Terapia de Yoga{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Mi Serie Terapéutica</h1>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        {% if series %}
+            <div class="series-detail-card">
+                <div class="series-header">
+                    <h2>{{ series.name }}</h2>
+                    <div class="series-type">{{ series.therapy_type.name }}</div>
+                </div>
+                
+                <div class="series-progress">
+                    <h3>Mi Progreso</h3>
+                    {% set completed = series.completed_sessions_count() %}
+                    {% set total = series.total_sessions %}
+                    {% set percent = (completed / total * 100)|int %}
+                    
+                    <div class="progress-container large">
+                        <div class="progress-bar" style="width: {{ percent }}%"></div>
+                        <span class="progress-text">{{ completed }}/{{ total }} sesiones completadas</span>
+                    </div>
+                    
+                    {% if not series.is_complete() %}
+                        <div class="series-actions">
+                            <a href="{{ url_for('patient.execute_series') }}" class="btn-primary">Comenzar Siguiente Sesión</a>
+                        </div>
+                    {% else %}
+                        <p class="series-complete-message">Has completado todas las sesiones recomendadas de esta serie.</p>
+                    {% endif %}
+                </div>
+                
+                <div class="series-postures">
+                    <h3>Posturas en Esta Serie</h3>
+                    <p class="posture-instruction">Estas posturas deben realizarse en el orden mostrado, durante el tiempo especificado.</p>
+                    
+                    <div class="posture-list-grid">
+                        {% for series_posture in series.postures %}
+                            <div class="posture-card">
+                                <div class="posture-number">{{ loop.index }}</div>
+                                <div class="posture-image">
+                                    <img src="{{ series_posture.posture.image_url or '/static/images/pose-placeholder.jpg' }}" 
+                                         alt="{{ series_posture.posture.name }}">
+                                </div>
+                                <div class="posture-details">
+                                    <h4>{{ series_posture.posture.name }}</h4>
+                                    <p class="posture-sanskrit">{{ series_posture.posture.sanskrit_name or '' }}</p>
+                                    <p class="posture-duration">{{ series_posture.duration_minutes }} minutos</p>
+                                </div>
+                                <div class="posture-info-toggle" data-posture-id="{{ series_posture.id }}">
+                                    <span>Ver Detalles</span>
+                                </div>
+                                <div class="posture-expanded-info" id="posture-info-{{ series_posture.id }}" style="display: none;">
+                                    <div class="info-section">
+                                        <h5>Descripción</h5>
+                                        <p>{{ series_posture.posture.description }}</p>
+                                    </div>
+                                    <div class="info-section">
+                                        <h5>Pasos</h5>
+                                        <p>{{ series_posture.posture.steps|nl2br }}</p>
+                                    </div>
+                                    <div class="info-section">
+                                        <h5>Beneficios</h5>
+                                        <p>{{ series_posture.posture.benefits }}</p>
+                                    </div>
+                                    {% if series_posture.posture.modifications %}
+                                        <div class="info-section">
+                                            <h5>Modificaciones</h5>
+                                            <p>{{ series_posture.posture.modifications }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>Aún no tienes asignada ninguna serie de yoga.</p>
+                <p>Tu instructor te asignará una serie terapéutica pronto.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mostrar/ocultar información detallada de posturas
+        const infoToggles = document.querySelectorAll('.posture-info-toggle');
+        
+        infoToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const postureId = this.getAttribute('data-posture-id');
+                const infoPanel = document.getElementById(`posture-info-${postureId}`);
+                
+                if (infoPanel.style.display === 'none') {
+                    infoPanel.style.display = 'block';
+                    this.querySelector('span').textContent = 'Ocultar Detalles';
+                } else {
+                    infoPanel.style.display = 'none';
+                    this.querySelector('span').textContent = 'Ver Detalles';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
