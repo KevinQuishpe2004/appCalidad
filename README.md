@@ -60,4 +60,12 @@ appCalidad/
 
 ## Requisitos para ejecución local
 
-  Tener instalado Python 3.10 o superior.
+1. **Tener instalado Python 3.10 o superior**  
+
+2. **Clonar el repositorio**
+
+3. **Instalar dependencias**
+  pip install -r requerimientos.txt
+
+4. **Ejecutar la aplicación**
+  python app.py
