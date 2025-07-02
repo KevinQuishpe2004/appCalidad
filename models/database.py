@@ -16,9 +16,10 @@ def init_db(app):
     from models.series_posture import SeriesPosture
     from models.session import Session
     
-    # with app.app_context():
-    #     db.create_all()
-
+    with app.app_context():
+        db.create_all()
+        populate_initial_data()
+        
 def populate_initial_data():
     from models.user import User
     from models.posture import Posture
