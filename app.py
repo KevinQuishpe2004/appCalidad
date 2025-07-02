@@ -13,9 +13,6 @@ app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Inicializar la base de datos SIEMPRE
-init_db(app)
-
 
 # Definición de filtros personalizados
 def nl2br(value):
@@ -55,6 +52,8 @@ if __name__ == '__main__':
     #from models.database import db  # importa la instancia de SQLAlchemy
     # Crear las tablas en la base de datos
     with app.app_context():
+        # Inicializar la base de datos SIEMPRE
+        init_db(app)
         # db.create_all()   
         # Populate initial data if database is empty
         populate_initial_data()
