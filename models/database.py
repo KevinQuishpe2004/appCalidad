@@ -17,6 +17,7 @@ def init_db(app):
     from models.session import Session
     
     with app.app_context():
+        db.drop_all()
         db.create_all()
         #populate_initial_data()
         
