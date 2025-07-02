@@ -16,8 +16,8 @@ def init_db(app):
     from models.series_posture import SeriesPosture
     from models.session import Session
     
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
 
 def populate_initial_data():
     from models.user import User
@@ -38,17 +38,17 @@ def populate_initial_data():
     db.session.add_all(therapy_types)
     db.session.commit()
     
-    # Create demo admin user if no users exist
-    if User.query.first() is None:
-        admin = User(
-            username="admin",
-            password=generate_password_hash("admin123"),
-            email="admin@example.com",
-            name="Administrator",
-            role="instructor"
-        )
-        db.session.add(admin)
-        db.session.commit()
+    # # Create demo admin user if no users exist
+    # if User.query.first() is None:
+    #     admin = User(
+    #         username="admin",
+    #         password=generate_password_hash("admin123"),
+    #         email="admin@example.com",
+    #         name="Administrator",
+    #         role="instructor"
+    #     )
+    #     db.session.add(admin)
+    #     db.session.commit()
     
     # Add sample postures
     # anxiety_poses = dolorCabeza_poses
