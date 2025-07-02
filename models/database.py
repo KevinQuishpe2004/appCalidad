@@ -18,7 +18,7 @@ def init_db(app):
     
     with app.app_context():
         db.create_all()
-        populate_initial_data()
+    #     populate_initial_data()
         
 def populate_initial_data():
     from models.user import User

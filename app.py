@@ -52,10 +52,10 @@ def about():
 
 if __name__ == '__main__':
     
-    from models.database import db  # importa la instancia de SQLAlchemy
+    #from models.database import db  # importa la instancia de SQLAlchemy
     # Crear las tablas en la base de datos
     with app.app_context():
-        db.create_all()   
+        # db.create_all()   
         # Populate initial data if database is empty
         populate_initial_data()
     
