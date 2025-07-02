@@ -13,6 +13,10 @@ app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Inicializar la base de datos SIEMPRE
+init_db(app)
+
+
 # Definición de filtros personalizados
 def nl2br(value):
     """Convierte saltos de línea en <br> tags de manera segura"""
@@ -47,8 +51,6 @@ def about():
 
 
 if __name__ == '__main__':
-    # Initialize database
-    init_db(app)
     
     from models.database import db  # importa la instancia de SQLAlchemy
     # Crear las tablas en la base de datos
