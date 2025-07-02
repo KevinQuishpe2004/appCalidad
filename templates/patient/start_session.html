@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - Terapia de Yoga{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Iniciar Tu Sesión</h1>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        <div class="form-card">
+            <h2>{{ series.name }}</h2>
+            <p class="series-type">{{ series.therapy_type.name }}</p>
+            
+            <div class="form-intro">
+                <p>Estás a punto de comenzar la sesión {{ series.completed_sessions_count() + 1 }} de {{ series.total_sessions }}.</p>
+                <p>Por favor indica tu nivel actual de dolor o malestar antes de comenzar:</p>
+            </div>
+            
+            <div class="pain-level-selection">
+                <a href="{{ url_for('patient.execute_series', pain_level='None') }}" class="pain-level-option pain-none">
+                    <div class="pain-icon">😊</div>
+                    <div class="pain-label">Sin Dolor</div>
+                </a>
+                
+                <a href="{{ url_for('patient.execute_series', pain_level='Mild') }}" class="pain-level-option pain-mild">
+                    <div class="pain-icon">🙂</div>
+                    <div class="pain-label">Leve</div>
+                </a>
+                
+                <a href="{{ url_for('patient.execute_series', pain_level='Moderate') }}" class="pain-level-option pain-moderate">
+                    <div class="pain-icon">😐</div>
+                    <div class="pain-label">Moderado</div>
+                </a>
+                
+                <a href="{{ url_for('patient.execute_series', pain_level='Intense') }}" class="pain-level-option pain-intense">
+                    <div class="pain-icon">😣</div>
+                    <div class="pain-label">Intenso</div>
+                </a>
+                
+                <a href="{{ url_for('patient.execute_series', pain_level='Maximum') }}" class="pain-level-option pain-maximum">
+                    <div class="pain-icon">😫</div>
+                    <div class="pain-label">Máximo</div>
+                </a>
+            </div>
+            
+            <div class="form-actions centered">
+                <a href="{{ url_for('patient.dashboard') }}" class="btn-secondary">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

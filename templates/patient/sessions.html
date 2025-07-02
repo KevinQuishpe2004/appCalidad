@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Sesiones - Terapia de Yoga{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Mi Historial de Sesiones</h1>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container">
+        {% if sessions %}
+            <div class="session-history-grid">
+                {% for session in sessions %}
+                    <div class="session-history-card">
+                        <div class="session-date">{{ session.date.strftime('%d de %B, %Y') }}</div>
+                        <h3 class="session-series-name">{{ session.series.name }}</h3>
+                        
+                        <div class="session-details">
+                            <div class="session-detail">
+                                <span class="detail-label">Hora:</span>
+                                <span class="detail-value">
+                                    {{ session.start_time.strftime('%H:%M') if session.start_time else 'N/A' }}
+                                    {% if session.end_time %}
+                                        - {{ session.end_time.strftime('%H:%M') }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <div class="session-detail">
+                                <span class="detail-label">Duración:</span>
+                                <span class="detail-value">
+                                    {% if session.effective_duration %}
+                                        {% set minutes = (session.effective_duration // 60) %}
+                                        {% set seconds = (session.effective_duration % 60) %}
+                                        {{ minutes }}m {{ seconds }}s
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <div class="session-detail">
+                                <span class="detail-label">Pausas:</span>
+                                <span class="detail-value">{{ session.pause_count }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="session-pain-levels">
+                            <div class="pain-comparison">
+                                <div class="pain-before">
+                                    <span class="pain-label">Inicial:</span>
+                                    <span class="pain-level pain-{{ session.pain_level_start|lower }}">
+                                        {{ session.pain_level_start }}
+                                    </span>
+                                </div>
+                                
+                                <div class="pain-arrow">→</div>
+                                
+                                <div class="pain-after">
+                                    <span class="pain-label">Final:</span>
+                                    <span class="pain-level pain-{{ session.pain_level_end|lower if session.pain_level_end else 'none' }}">
+                                        {{ session.pain_level_end or 'N/A' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if session.comment %}
+                            <div class="session-comment">
+                                <h4>Mi Comentario:</h4>
+                                <p>{{ session.comment }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>Aún no has completado ninguna sesión.</p>
+                {% if patient.assigned_series and not patient.assigned_series.is_complete() %}
+                    <a href="{{ url_for('patient.execute_series') }}" class="btn-primary">Comenzar mi primera sesión</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

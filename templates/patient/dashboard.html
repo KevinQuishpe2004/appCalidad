@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel del Paciente - Terapia de Yoga{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Panel del Paciente</h1>
+        <p>Bienvenido/a, {{ patient.name }}</p>
+    </div>
+</section>
+
+<section class="dashboard-content">
+    <div class="container">
+        {% if patient.assigned_series %}
+            <div class="current-series-card">
+                <h2>Tu Serie Actual</h2>
+                <div class="series-info">
+                    <h3>{{ patient.assigned_series.name }}</h3>
+                    <p class="series-type">{{ patient.assigned_series.therapy_type.name }}</p>
+                    
+                    <div class="series-progress">
+                        {% set completed = patient.assigned_series.completed_sessions_count() %}
+                        {% set total = patient.assigned_series.total_sessions %}
+                        {% set percent = (completed / total * 100)|int %}
+                        
+                        <div class="progress-container large">
+                            <div class="progress-bar" style="width: {{ percent }}%"></div>
+                            <span class="progress-text">{{ completed }}/{{ total }} sesiones completadas</span>
+                        </div>
+                    </div>
+                    
+                    <div class="series-actions">
+                        {% if patient.assigned_series.is_complete() %}
+                            <div class="series-complete-message">
+                                <p>¡Felicidades! Has completado todas las sesiones de esta serie.</p>
+                            </div>
+                        {% else %}
+                            <a href="{{ url_for('patient.execute_series') }}" class="btn-primary">Comenzar Próxima Sesión</a>
+                        {% endif %}
+                        <a href="{{ url_for('patient.view_series') }}" class="btn-secondary">Ver Detalles de la Serie</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No tienes ninguna serie de yoga asignada aún.</p>
+                <p>Tu instructor te asignará una serie terapéutica pronto.</p>
+            </div>
+        {% endif %}
+        
+        <div class="dashboard-recent">
+            <h2>Sesiones Recientes</h2>
+            {% if patient.sessions %}
+                <div class="session-list">
+                    {% for session in patient.sessions[:3] %}
+                        <div class="session-card">
+                            <div class="session-date">{{ session.date.strftime('%d %b, %Y') }}</div>
+                            <div class="session-info">
+                                <h3>{{ session.series.name }}</h3>
+                                <div class="session-details">
+                                    <div class="session-detail">
+                                        <span class="detail-label">Dolor Inicial:</span>
+                                        <span class="pain-level pain-{{ session.pain_level_start|lower }}">
+                                            {{ session.pain_level_start }}
+                                        </span>
+                                    </div>
+                                    <div class="session-detail">
+                                        <span class="detail-label">Dolor Final:</span>
+                                        <span class="pain-level pain-{{ session.pain_level_end|lower if session.pain_level_end else 'none' }}">
+                                            {{ session.pain_level_end or 'N/A' }}
+                                        </span>
+                                    </div>
+                                    <div class="session-detail">
+                                        <span class="detail-label">Duración:</span>
+                                        {% if session.effective_duration %}
+                                            {% set minutes = (session.effective_duration // 60) %}
+                                            {% set seconds = (session.effective_duration % 60) %}
+                                            {{ minutes }}m {{ seconds }}s
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="view-all-link">
+                    <a href="{{ url_for('patient.sessions') }}">Ver Todas las Sesiones</a>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>No has completado ninguna sesión aún.</p>
+                    {% if patient.assigned_series and not patient.assigned_series.is_complete() %}
+                        <a href="{{ url_for('patient.execute_series') }}" class="btn-primary">Comenzar tu Primera Sesión</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
