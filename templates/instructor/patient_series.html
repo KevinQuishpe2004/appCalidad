@@ -2,6 +2,79 @@
 
 {% block title %}Serie Terapéutica - {{ patient.name }} - Yoga Terapia{% endblock %}
 
+{% block extra_css %}
+<style>
+    .series-detail-card {
+        background: var(--color-background-light);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .posture-timeline-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid var(--color-border);
+    }
+    
+    .posture-number {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        margin-right: 20px;
+        min-width: 30px;
+    }
+    
+    .posture-details {
+        flex-grow: 1;
+    }
+    
+    /* CONTENEDOR DEL VIDEO */
+    .posture-image {
+        width: 250px;
+        height: 250px; /* Altura fija para mantener proporción */
+        padding: 20px;
+        margin-left: 20px;
+    }
+    
+    .video-container {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 141.42%; /* Proporción 16:9 (9/16*100) */
+        overflow: hidden;
+        border-radius: 8px;
+        background: #000;
+    }
+    
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    
+    @media (max-width: 768px) {
+        .posture-timeline-item {
+            flex-direction: column;
+        }
+        
+        .posture-image {
+            width: 100%;
+            margin: 20px 0 0 0;
+        }
+        
+        .video-container {
+            padding-bottom: 56.25%; /* Mantener ratio 16:9 en móviles */
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="page-header">
     <div class="container">
@@ -55,8 +128,21 @@
                                     <p class="posture-duration">{{ series_posture.duration_minutes }} minutos</p>
                                 </div>
                                 <div class="posture-image">
-                                    <img src="{{ series_posture.posture.image_url or '/static/images/pose-placeholder.jpg' }}" 
-                                         alt="{{ series_posture.posture.name }}">
+                                    {% if series_posture.posture.image_url and ('youtube.com' in series_posture.posture.image_url or 'youtu.be' in series_posture.posture.image_url) %}
+                                        <div class="video-container">
+                                            {% set video_id = series_posture.posture.image_url.split('v=')[1].split('&')[0] if 'youtube.com' in series_posture.posture.image_url else series_posture.posture.image_url.split('youtu.be/')[1].split('?')[0] %}
+                                            <iframe 
+                                                src="https://www.youtube.com/embed/{{ video_id }}?rel=0&modestbranding=1&autoplay=0&controls=1&showinfo=0" 
+                                                frameborder="0" 
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                allowfullscreen>
+                                            </iframe>
+                                        </div>
+                                    {% else %}
+                                        <img src="{{ series_posture.posture.image_url or '/static/images/pose-placeholder.jpg' }}" 
+                                             alt="{{ series_posture.posture.name }}"
+                                             style="width: 100%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}
