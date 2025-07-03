@@ -19,12 +19,12 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <!-- <th>Fecha</th> -->
+                            <th>Fecha</th> 
                             <th>Serie</th>
-                            <!-- <th>Hora Inicio</th>
-                            <th>Hora Fin</th> -->
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
                             <th>Duración</th>
-                            <!-- <th>Pausas</th> -->
+                            <th>Pausas</th>
                             <th>Dolor Inicial</th>
                             <th>Dolor Final</th>
                             <th>Acciones</th>
@@ -33,10 +33,10 @@
                     <tbody>
                         {% for session in sessions %}
                             <tr>
-                                <!-- <td>{{ session.date.strftime('%d/%m/%Y') }}</td> -->
+                               <td>{{ session.date.strftime('%d/%m/%Y') }}</td> 
                                 <td>{{ session.series.name }}</td>
-                                <!-- <td>{{ session.start_time.strftime('%H:%M') if session.start_time else '-' }}</td>
-                                <td>{{ session.end_time.strftime('%H:%M') if session.end_time else '-' }}</td> -->
+                                 <td>{{ session.start_time.strftime('%H:%M') if session.start_time else '-' }}</td>
+                                <td>{{ session.end_time.strftime('%H:%M') if session.end_time else '-' }}</td> 
                                 <td>
                                     {% if session.effective_duration %}
                                         {% set minutes = (session.effective_duration // 60) %}
@@ -46,7 +46,7 @@
                                         -
                                     {% endif %}
                                 </td>
-                                <!-- <td>{{ session.pause_count }}</td> -->
+                                <td>{{ session.pause_count }}</td> 
                                 <td>
                                     <span class="pain-level pain-{{ session.pain_level_start|lower }}">
                                         {{ session.pain_level_start }}
