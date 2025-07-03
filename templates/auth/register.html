@@ -2,29 +2,97 @@
 
 {% block title %}Registro - Yoga Terapia{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
 {% block content %}
 <section class="auth-section">
     <div class="container" style="display: flex; justify-content: center; align-items: center;">
         <div class="auth-card">
             <h1 class="auth-title">Registro de Instructor</h1>
-            <form method="POST" action="{{ url_for('auth.register') }}" class="auth-form">
-                <div class="form-group">
-                    <label for="name">Nombre Completo</label>
-                    <input type="text" id="name" name="name" required>
+            <form method="POST" action="{{ url_for('auth.register') }}" class="auth-form" id="formulario_registro">
+                <div class="form-group grupo_formulario">
+                    <label for="nombre_completo">Nombre Completo</label>
+                    <input type="text" id="nombre_completo" name="name" required minlength="2" maxlength="120">
+                    <div class="error_formulario" id="error_nombre">El nombre debe tener al menos 2 caracteres.</div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" required>
+
+                <div class="form-group grupo_formulario">
+                    <label for="correo_electronico">Correo Electrónico</label>
+                    <input type="email" id="correo_electronico" name="email" required>
+                    <div class="error_formulario" id="error_correo">Por favor ingresa un email válido.</div>
                 </div>
-                <div class="form-group">
-                    <label for="username">Nombre de Usuario</label>
-                    <input type="text" id="username" name="username" required>
+
+                <div class="form-group grupo_formulario">
+                    <label for="nombre_usuario">Nombre de Usuario</label>
+                    <input type="text" id="nombre_usuario" name="username" required minlength="3" maxlength="20"
+                        pattern="[a-zA-Z0-9_]+">
+                    <small>Solo letras, números y guiones bajos. Mínimo 3 caracteres.</small>
+                    <div class="error_formulario" id="error_usuario">El nombre de usuario debe tener 3-20 caracteres y
+                        solo contener letras, números y guiones bajos.</div>
                 </div>
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" required>
+
+                <div class="form-group grupo_formulario">
+                    <label for="contrasena">Contraseña</label>
+                    <div class="contenedor_input_contrasena">
+                        <input type="password" id="contrasena" name="password" class="campo_contrasena" required>
+                        <button type="button" class="boton_mostrar_contrasena" id="alternar_contrasena">
+                            👁️
+                        </button>
+                    </div>
+
+                    <!-- Medidor de fortaleza -->
+                    <div class="medidor_fortaleza_contrasena">
+                        <div class="barra_fortaleza_contrasena" id="barra_fortaleza"></div>
+                    </div>
+                    <div class="texto_fortaleza" id="texto_fortaleza">Ingresa tu contraseña</div>
+
+                    <!-- Requisitos de contraseña -->
+                    <div class="requisitos_contrasena">
+                        <div class="requisito_contrasena invalido" id="req_longitud">
+                            <span class="icono_requisito">✓</span>
+                            Al menos 8 caracteres
+                        </div>
+                        <div class="requisito_contrasena invalido" id="req_mayuscula">
+                            <span class="icono_requisito">✓</span>
+                            Al menos una letra mayúscula
+                        </div>
+                        <div class="requisito_contrasena invalido" id="req_minuscula">
+                            <span class="icono_requisito">✓</span>
+                            Al menos una letra minúscula
+                        </div>
+                        <div class="requisito_contrasena invalido" id="req_numero">
+                            <span class="icono_requisito">✓</span>
+                            Al menos un número
+                        </div>
+                        <div class="requisito_contrasena invalido" id="req_especial">
+                            <span class="icono_requisito">✓</span>
+                            Al menos un carácter especial (@$!%*?&)
+                        </div>
+                    </div>
+                    <div class="error_formulario" id="error_contrasena">La contraseña no cumple con los requisitos de
+                        seguridad.</div>
                 </div>
-                <button type="submit" class="btn-primary btn-full">Registrarse</button>
+
+                <div class="form-group grupo_formulario">
+                    <label for="confirmar_contrasena">Confirmar Contraseña</label>
+                    <div class="contenedor_input_contrasena">
+                        <input type="password" id="confirmar_contrasena" name="confirmPassword" class="campo_contrasena"
+                            required>
+                        <button type="button" class="boton_mostrar_contrasena" id="alternar_confirmacion">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error_formulario" id="error_confirmacion">Las contraseñas no coinciden.</div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-full" id="boton_enviar">Registrarse</button>
+                
+                <!-- DEBUG INFO -->
+                <div id="debug_info" style="margin-top: 10px; font-size: 12px; color: #666;">
+                    <p>Estado del formulario: <span id="debug_status">Cargando...</span></p>
+                </div>
             </form>
             <div class="auth-links">
                 <p>¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a></p>
@@ -32,4 +100,10 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+
 {% endblock %}

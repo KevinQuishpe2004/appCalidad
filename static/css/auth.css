@@ -1,0 +1,303 @@
+/* Estilos para validación de contraseñas seguras */
+
+    .medidor_fortaleza_contrasena {
+        margin-top: 8px;
+        background-color: #f0f0f0;
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .barra_fortaleza_contrasena {
+        height: 100%;
+        width: 0%;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
+
+    .fortaleza_debil {
+        background-color: #ef5350;
+        width: 25%;
+    }
+
+    .fortaleza_regular {
+        background-color: #ff9800;
+        width: 50%;
+    }
+
+    .fortaleza_buena {
+        background-color: #ffc107;
+        width: 75%;
+    }
+
+    .fortaleza_fuerte {
+        background-color: #4caf50;
+        width: 100%;
+    }
+
+    .requisitos_contrasena {
+        margin-top: 12px;
+        font-size: 0.875rem;
+        background-color: var(--color-background-light);
+        border-radius: var(--border-radius-md);
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-border);
+    }
+
+    .requisito_contrasena {
+        display: flex;
+        align-items: center;
+        margin-bottom: 6px;
+        transition: color 0.3s ease;
+        font-size: 0.875rem;
+    }
+
+    .requisito_contrasena:last-child {
+        margin-bottom: 0;
+    }
+
+    .icono_requisito {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .requisito_contrasena.valido {
+        color: var(--color-success);
+    }
+
+    .requisito_contrasena.valido .icono_requisito {
+        background-color: var(--color-success);
+        color: white;
+    }
+
+    .requisito_contrasena.invalido {
+        color: var(--color-text-muted);
+    }
+
+    .requisito_contrasena.invalido .icono_requisito {
+        background-color: var(--color-background-dark);
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+    }
+
+    .contenedor_input_contrasena {
+        position: relative;
+    }
+
+    .boton_mostrar_contrasena {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: var(--color-text-light);
+        transition: color var(--transition-fast);
+        z-index: 2;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .boton_mostrar_contrasena:hover {
+        color: var(--color-primary);
+    }
+
+    .campo_contrasena {
+        padding-right: 45px !important;
+    }
+
+    .texto_fortaleza {
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-top: 4px;
+        transition: color 0.3s ease;
+    }
+
+    .error_formulario {
+        color: var(--color-danger);
+        font-size: 0.875rem;
+        margin-top: 6px;
+        display: none;
+        background-color: rgba(239, 83, 80, 0.1);
+        padding: var(--spacing-xs);
+        border-radius: var(--border-radius-sm);
+        border-left: 3px solid var(--color-danger);
+    }
+
+    .grupo_formulario.con_error input {
+        border-color: var(--color-danger);
+        box-shadow: 0 0 0 2px rgba(239, 83, 80, 0.1);
+    }
+
+    .grupo_formulario.con_error .error_formulario {
+        display: block;
+        animation: deslizar_abajo 0.3s ease-out;
+    }
+
+    @keyframes deslizar_abajo {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Estilos para botón deshabilitado */
+    .btn-primary:disabled {
+        background-color: var(--color-text-muted);
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .btn-primary:disabled:hover {
+        background-color: var(--color-text-muted);
+        transform: none;
+    }
+
+    /* Indicadores de validación en tiempo real */
+    .grupo_formulario input.valido {
+        border-color: var(--color-success);
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+    }
+
+    .grupo_formulario input.invalido {
+        border-color: var(--color-danger);
+    }
+
+    /* Estilos para flash messages mejorados */
+    .flash-error {
+        background-color: var(--color-danger);
+        color: white;
+        border-left: 4px solid #d32f2f;
+    }
+
+    .flash-success {
+        background-color: var(--color-success);
+        color: white;
+        border-left: 4px solid #2e7d32;
+    }
+
+    /* DEBUG: Botón en estado de debug */
+    .btn-debug {
+        background-color: #ff5722 !important;
+        color: white !important;
+    }
+
+    /* Responsive para dispositivos móviles */
+    @media (max-width: 576px) {
+        .requisitos_contrasena {
+            font-size: 0.8rem;
+            padding: var(--spacing-xs);
+        }
+
+        .requisito_contrasena {
+            margin-bottom: 4px;
+        }
+
+        .icono_requisito {
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            margin-right: 8px;
+        }
+
+        .boton_mostrar_contrasena {
+            right: 8px;
+            font-size: 1rem;
+        }
+
+        .campo_contrasena {
+            padding-right: 35px !important;
+        }
+
+        .auth-card {
+            padding: var(--spacing-md);
+            margin: var(--spacing-sm);
+        }
+    }
+
+    /* Animaciones adicionales */
+    @keyframes pulso {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .requisito_contrasena.valido .icono_requisito {
+        animation: pulso 0.3s ease-in-out;
+    }
+
+    /* Estados de hover mejorados */
+    .boton_mostrar_contrasena:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+
+    /* Estilos para accesibilidad */
+    .requisito_contrasena {
+        min-height: 24px;
+        align-items: flex-start;
+        padding-top: 2px;
+    }
+
+    .icono_requisito {
+        margin-top: 1px;
+    }
+
+    /* Indicador de carga para envío de formulario */
+    .btn-primary.cargando {
+        position: relative;
+        color: transparent;
+    }
+
+    .btn-primary.cargando::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: girar 1s linear infinite;
+    }
+
+    @keyframes girar {
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
