@@ -199,7 +199,7 @@
             }
         });
         
-        // Función para mostrar posturas disponibles
+        // Función para mostrar posturas disponibles (VERSIÓN CORREGIDA)
         function renderAvailablePostures() {
             postureList.innerHTML = '';
             
@@ -210,9 +210,29 @@
                 postureCard.className = `posture-card ${isSelected ? 'selected' : ''}`;
                 postureCard.dataset.id = posture.id;
                 
+                // Detectar si es video de YouTube
+                const isYouTube = posture.image_url && 
+                                 (posture.image_url.includes('youtube.com') || 
+                                  posture.image_url.includes('youtu.be'));
+                
+                // Extraer ID de YouTube
+                let videoContent = '';
+                if (isYouTube) {
+                    const videoId = posture.image_url.split('v=')[1]?.split('&')[0] || 
+                                   posture.image_url.split('youtu.be/')[1]?.split('?')[0];
+                    videoContent = `
+                        <iframe 
+                            src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1" 
+                            frameborder="0" 
+                            allowfullscreen>
+                        </iframe>`;
+                } else {
+                    videoContent = `<img src="${posture.image_url || '/static/images/pose-placeholder.jpg'}" alt="${posture.name}">`;
+                }
+                
                 postureCard.innerHTML = `
                     <div class="posture-image">
-                        <img src="${posture.image_url || '/static/images/pose-placeholder.jpg'}" alt="${posture.name}">
+                        ${videoContent}
                     </div>
                     <div class="posture-details">
                         <div class="posture-name">${posture.name}</div>
@@ -224,15 +244,13 @@
                     const postureId = parseInt(this.dataset.id);
                     
                     if (isSelected) {
-                        // Remover de seleccionadas
                         selectedPostures = selectedPostures.filter(p => p.id !== postureId);
                         this.classList.remove('selected');
                     } else {
-                        // Agregar a seleccionadas
                         const postureToAdd = availablePostures.find(p => p.id === postureId);
                         selectedPostures.push({
                             ...postureToAdd,
-                            duration: 2 // Duración por defecto en minutos
+                            duration: 2
                         });
                         this.classList.add('selected');
                     }
