@@ -1374,7 +1374,13 @@ small {
     }
     
     .main-nav {
-        display: none;
+        right: auto;
+        left: -100%;
+    }
+
+    .main-nav.active {
+        right: auto;
+        left: 0;
     }
     
     .menu-toggle {
