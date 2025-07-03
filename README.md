@@ -1,71 +1,76 @@
-# App Yogaterapy (v1) 
+# 🧘‍♀️ App YogaTherapy (v2)
 
-Aplicación web desarrollada para facilitar la gestión de terapias de yoga personalizadas entre instructores y pacientes. Proyecto realizado como parte de la asignatura de Calidad de Software.
+**App YogaTherapy** es una plataforma web diseñada para facilitar la prescripción, ejecución y seguimiento de terapias de yoga personalizadas. Instructores pueden asignar series de posturas según el tipo de terapia, y los pacientes realizan sesiones guiadas con retroalimentación sobre su estado físico.
 
----
-
-## Características principales
-
-- Asignación de series terapéuticas a pacientes.
-- Ejecución guiada paso a paso de series con cronómetro.
-- Registro de sesiones y feedback del paciente.
-- Gestión de pacientes y visualización de su progreso.
-- Control de acceso por tipo de usuario (instructor o paciente).
+Proyecto desarrollado como parte de la asignatura de **Calidad de Software**.
 
 ---
 
-## Tecnologías utilizadas
+## 🚀 Funcionalidades clave
 
-- Python 3.10
-- Flask
-- SQLAlchemy
-- HTML + CSS (Jinja2 templates)
-- SQLite
-
----
-
-## Integrantes del equipo (Team QualiDepv)
-
-- Oscar Tumbaco – Tester  
-- Kevin Quishpe – Desarrollador  
-- Juan Naranjo – Tester  
-- Sebastián Sánchez – Analista  
-- Cesar Pantoja – Desarrollador  
+- 📋 Registro de pacientes por parte del instructor
+- 🧩 Asignación de **series terapéuticas** personalizadas
+- ⏱️ Ejecución guiada de posturas con cronómetro
+- 📈 Registro de sesiones con:
+  - Nivel de dolor (inicio/fin)
+  - Duración efectiva
+  - Número de pausas
+  - Comentarios
+- 🔐 Autenticación con control de acceso por tipo de usuario (`Instructor` o `Paciente`)
+- 📊 Dashboard con historial y progreso visual
 
 ---
 
-## Estructura del proyecto
+## 🛠️ Tecnologías utilizadas
 
-appCalidad/
+- **Python 3.10**
+- **Flask** (microframework web)
+- **SQLAlchemy** (ORM)
+- **HTML + CSS + JavaScript** (con templates Jinja2)
+- **SQLite** (base de datos por defecto, puede migrarse)
 
-              ├── models/ # Clases ORM y conexión a BD
+---
 
-              ├── routes/ # Lógica de control (controllers)
+## 👥 Roles y funcionalidades
 
-              ├── templates/ # Vistas HTML (Jinja2)
-    
-              ├── static/ # Archivos CSS y JS
+| Rol        | Acciones habilitadas |
+|------------|-----------------------|
+| **Instructor** | Crear series, registrar pacientes, asignar series, ver sesiones de pacientes |
+| **Paciente**   | Ver su serie asignada, ejecutar sesiones, registrar su nivel de dolor, revisar historial |
 
-              └── main.py # Punto de entrada de la app
+---
+
+## 📂 Estructura del proyecto
+
+          ├── models/ # Clases ORM y conexión a BD
+
+          ├── routes/ # Lógica de control (controllers)
+
+          ├── templates/ # Vistas HTML (Jinja2)
+
+          ├── static/ # Archivos CSS y JS
+
+          └── main.py # Punto de entrada de la app
 
 
 ---
 
-## Documentación
+## 🧪 Requisitos para ejecución local
 
-> 📄 Puedes consultar la documentación técnica completa aquí:  
-> [`DOCUMENTACION_V1.md`](documentaciónv1.md)  
-
----
-
-## Requisitos para ejecución local
-
-1. **Tener instalado Python 3.10 o superior**  
+1. **Tener instalado Python 3.10 o superior**
 
 2. **Clonar el repositorio**
+```bash
+git clone https://github.com/KevinQuishpe2004/appCalidad.git
+cd appCalidad
+```
+3. **Instalar las dependencias**
+```bash
+pip install -r requerimients.txt
+```
+4. Ejecutar la aplicación
+```bash
+python main.py
+```
+   
 
-3. **Instalar dependencias**
-  pip install -r requerimientos.txt
-
-4. **Ejecutar la aplicación**
-  python app.py
