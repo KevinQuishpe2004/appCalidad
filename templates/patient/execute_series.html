@@ -146,7 +146,19 @@
                     <p class="posture-sanskrit">{{ posture.sanskrit_name or '' }}</p>
                     
                     <div class="posture-image-container">
-                        <img src="{{ posture.image_url or '/static/images/pose-placeholder.jpg' }}" alt="{{ posture.name }}" class="posture-image-large">
+                        {% if posture.image_url and ('youtube.com' in posture.image_url or 'youtu.be' in posture.image_url) %}
+                            {# Es un video de YouTube #}
+                            {% set video_id = posture.image_url.split('v=')[1].split('&')[0] if 'youtube.com' in posture.image_url else posture.image_url.split('youtu.be/')[1].split('?')[0] %}
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ video_id }}?rel=0&modestbranding=1" 
+                                frameborder="0" 
+                                allowfullscreen
+                                class="posture-image-large">
+                            </iframe>
+                        {% else %}
+                            {# Es una imagen normal #}
+                            <img src="{{ posture.image_url or '/static/images/pose-placeholder.jpg' }}" alt="{{ posture.name }}" class="posture-image-large">
+                        {% endif %}
                     </div>
                     
                     <div class="posture-tabs">

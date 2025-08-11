@@ -10,8 +10,12 @@ import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///yoga_therapy.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://yoga_therapy_user:yJyvxfMoPln6ls8n3Q70qpIcYoN1CLVr@dpg-d1ion0idbo4c73f7rueg-a.oregon-postgres.render.com/yoga_therapy'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Inicializar la base de datos SIEMPRE
+init_db(app)
 
 # Definición de filtros personalizados
 def nl2br(value):
@@ -47,14 +51,14 @@ def about():
 
 
 if __name__ == '__main__':
-    # Initialize database
-    init_db(app)
     
-    # Populate initial data if database is empty
+    #from models.database import db  # importa la instancia de SQLAlchemy
+    # Crear las tablas en la base de datos
     with app.app_context():
+        # db.create_all()   
+        # Populate initial data if database is empty
         populate_initial_data()
     
     # Run the application
     app.run(debug=True, port=5050)
-    
     

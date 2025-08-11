@@ -21,22 +21,75 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 5000);
 
-    // Mobile menu toggle
+    // Mobile menu toggle - VERSIÓN MEJORADA Y RESPONSIVE
     const menuToggle = document.querySelector('.menu-toggle');
     const mainNav = document.querySelector('.main-nav');
     
     if (menuToggle && mainNav) {
-        menuToggle.addEventListener('click', function() {
-            mainNav.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-            
+        // Buscar overlay existente o crear uno nuevo
+        let navOverlay = document.querySelector('.overlay');
+        if (!navOverlay) {
+            navOverlay = document.createElement('div');
+            navOverlay.className = 'overlay';
+            document.body.appendChild(navOverlay);
+        }
+        
+        // Función para abrir menú
+        function openMenu() {
+            menuToggle.classList.add('active');
+            mainNav.classList.add('active');
+            navOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Función para cerrar menú
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            mainNav.classList.remove('active');
+            navOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Toggle menú al hacer clic en el botón hamburguesa
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
             if (mainNav.classList.contains('active')) {
-                mainNav.style.display = 'block';
+                closeMenu();
             } else {
-                setTimeout(() => {
-                    mainNav.style.display = '';
-                }, 300);
+                openMenu();
             }
+        });
+        
+        // Cerrar menú al hacer clic en overlay
+        navOverlay.addEventListener('click', closeMenu);
+        
+        // Cerrar menú al hacer clic en enlaces
+        mainNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                // Solo cerrar en móvil
+                if (window.innerWidth <= 768) {
+                    closeMenu();
+                }
+            });
+        });
+        
+        // Cerrar menú al cambiar tamaño de ventana (si pasa a desktop)
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMenu();
+            }
+        });
+        
+        // Cerrar menú con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mainNav.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+        
+        // Prevenir propagación de clics dentro del nav
+        mainNav.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
     }
     
