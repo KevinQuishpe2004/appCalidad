@@ -62,16 +62,27 @@ Proyecto desarrollado como parte de la asignatura de **Calidad de Software**.
 ## 📂 Estructura del proyecto
 
 📂 instance/ → Configuración y datos locales fuera de control de versiones
+
 📂 models/ → Definiciones de entidades y estructuras de datos
+
 📂 routes/ → Controladores y rutas de la aplicación
+
 📂 static/ → Archivos estáticos (imágenes, CSS, JS)
+
 📂 templates/ → Plantillas HTML para la interfaz
+
 📄 .gitignore → Archivos/carpetas ignorados por Git
+
 📄 .runtime.txt → Versión de Python para ejecución
+
 📄 app.py → Punto de entrada principal
+
 📄 documentaciónv3.md → Documentación de esta versión
+
 📄 Procfile → Configuración de despliegue en Heroku u otros
+
 📄 README.md → Descripción general del proyecto
+
 📄 requirements.txt → Lista de dependencias necesarias
 
 ## 5. Instrucciones de Instalación y Ejecución
