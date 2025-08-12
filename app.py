@@ -11,7 +11,7 @@ import re
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://yoga_therapy_user:yJyvxfMoPln6ls8n3Q70qpIcYoN1CLVr@dpg-d1ion0idbo4c73f7rueg-a.oregon-postgres.render.com/yoga_therapy'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://yoga_therapy_user:t8evTXerEeA6kT6GmrBK4CQ8Cut0LXdi@dpg-d2d83andiees73fvc5ig-a.oregon-postgres.render.com/yoga_therapy_2bmk'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Inicializar la base de datos SIEMPRE
